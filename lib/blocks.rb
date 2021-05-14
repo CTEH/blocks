@@ -22,5 +22,16 @@ module Blocks
   end
 end
 
-ActionView::Base.send :include, Blocks::ViewAdditions
-ActionController::Base.send :include, Blocks::ControllerAdditions
+if defined?(Rails)
+  if Rails::VERSION::MAJOR >= 6
+    ActiveSupport.on_load(:action_view_base) do
+      ActionView::Base.send :include, Blocks::ViewAdditions
+    end
+    ActiveSupport.on_load(:action_controller_base) do
+      ActionController::Base.send :include, Blocks::ControllerAdditions
+    end
+  else
+    ActionView::Base.send :include, Blocks::ViewAdditions
+    ActionController::Base.send :include, Blocks::ControllerAdditions
+  end
+end
